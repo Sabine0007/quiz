@@ -118,9 +118,10 @@
     p.set("u", FORM); p.set("f", FORM); p.set("s", ""); p.set("c", "0"); p.set("m", "0");
     p.set("act", "sub"); p.set("v", "2"); p.set("or", ""); p.set("jsonp", "true");
     p.set("firstname", vorname); p.set("email", email);
-    var s = document.createElement("script");
-    s.src = AC + "/proc.php?" + p.toString();
-    document.body.appendChild(s);
+    // Antwort von ActiveCampaign bewusst ignorieren (AC würde sonst die Seite umleiten)
+    var url = AC + "/proc.php?" + p.toString();
+    try { fetch(url, {mode:"no-cors", keepalive:true, credentials:"omit"}); }
+    catch(e){ var i = new Image(); i.src = url; }
     $("anmelde-form").hidden = true; $("ok").hidden = false;
   });
 })();

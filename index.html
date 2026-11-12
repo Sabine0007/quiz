@@ -178,6 +178,13 @@
     unklar: "Es ist nicht wichtig, wann es angefangen hat. Wichtig ist, dass du es jetzt bemerkst."
   };
 
+
+  // Daten an ActiveCampaign senden, Antwort bewusst ignorieren (AC würde sonst die ganze Seite umleiten)
+  function anAC(url){
+    try { fetch(url, {mode:"no-cors", keepalive:true, credentials:"omit"}); }
+    catch(e){ var i = new Image(); i.src = url; }
+  }
+
   // typ: system | muster (gewicht) | zeit
   var FRAGEN = [
     {typ:"system", text:"Wo wiederholt sich bei dir gerade etwas immer wieder, wo stockt es am meisten?", optionen:[
@@ -305,9 +312,7 @@
     if(CONFIG.fieldSystem) p.set("field[" + CONFIG.fieldSystem + "]", e.system);
     if(CONFIG.fieldMuster) p.set("field[" + CONFIG.fieldMuster + "]", e.muster);
     if(CONFIG.fieldZeit) p.set("field[" + CONFIG.fieldZeit + "]", e.zeit);
-    var s = document.createElement("script");
-    s.src = CONFIG.acUrl + "/proc.php?" + p.toString();
-    document.body.appendChild(s);
+    anAC(CONFIG.acUrl + "/proc.php?" + p.toString());
   }
 
   // Anmeldung zu den Launch-Abenden mit einem Klick (eigenes ActiveCampaign-Formular)
@@ -318,9 +323,7 @@
       p.set("u", CONFIG.launchFormId); p.set("f", CONFIG.launchFormId); p.set("s", ""); p.set("c", "0"); p.set("m", "0");
       p.set("act", "sub"); p.set("v", "2"); p.set("or", ""); p.set("jsonp", "true");
       p.set("firstname", kontakt.vorname); p.set("email", kontakt.email);
-      var s = document.createElement("script");
-      s.src = CONFIG.acUrl + "/proc.php?" + p.toString();
-      document.body.appendChild(s);
+      anAC(CONFIG.acUrl + "/proc.php?" + p.toString());
     }
     $("launch-btn").hidden = true; $("launch-hint").hidden = true; $("launch-ok").hidden = false;
   });
