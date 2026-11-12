@@ -223,9 +223,12 @@
   function meldeHoehe(nachOben){
     if(window.parent === window) return;
     setTimeout(function(){
-      window.parent.postMessage({typ:"tsm-quiz", hoehe:document.documentElement.scrollHeight, nachOben:!!nachOben}, "*");
+      var w = document.querySelector(".wrap");
+      var h = Math.ceil(w.getBoundingClientRect().height) + 72;
+      window.parent.postMessage({typ:"tsm-quiz", hoehe:h, nachOben:!!nachOben}, "*");
     }, 60);
   }
+  if(window.parent !== window){ document.body.style.minHeight = "0"; document.body.style.backgroundAttachment = "scroll"; }
   window.addEventListener("load", function(){ meldeHoehe(false); });
   window.addEventListener("resize", function(){ meldeHoehe(false); });
   if(window.ResizeObserver){ new ResizeObserver(function(){ meldeHoehe(false); }).observe(document.body); }
