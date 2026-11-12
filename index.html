@@ -223,12 +223,19 @@
   function meldeHoehe(nachOben){
     if(window.parent === window) return;
     setTimeout(function(){
-      var w = document.querySelector(".wrap");
-      var h = Math.ceil(w.getBoundingClientRect().height) + 72;
+      var h = Math.ceil(document.body.getBoundingClientRect().height) + 2;
       window.parent.postMessage({typ:"tsm-quiz", hoehe:h, nachOben:!!nachOben}, "*");
     }, 60);
   }
-  if(window.parent !== window){ document.body.style.minHeight = "0"; document.body.style.backgroundAttachment = "scroll"; }
+  if(window.parent !== window){
+    // eingebettet: kein eigenes Scrollen (sonst bleibt am Handy der Finger im Quiz hängen), wenig Abstand oben
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    document.body.style.minHeight = "0";
+    document.body.style.paddingTop = "8px";
+    document.body.style.paddingBottom = "16px";
+    document.body.style.backgroundAttachment = "scroll";
+  }
   window.addEventListener("load", function(){ meldeHoehe(false); });
   window.addEventListener("resize", function(){ meldeHoehe(false); });
   if(window.ResizeObserver){ new ResizeObserver(function(){ meldeHoehe(false); }).observe(document.body); }
